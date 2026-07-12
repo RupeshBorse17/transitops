@@ -1,10 +1,10 @@
 package com.transitops.enums;
 
-public enum DriverStatus {
+public enum VehicleStatus {
 
     AVAILABLE,
     ON_TRIP,
-    OFF_DUTY,
-    SUSPENDED
+    IN_SHOP,
+    RETIRED
 
 }
