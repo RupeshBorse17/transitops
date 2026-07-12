@@ -103,13 +103,3 @@ Core entities:
 
 Useful indexes and unique constraints are applied on registration numbers, license numbers, statuses, dates, and foreign keys.
 
-## Screenshots
-
-Add screenshots here:
-
-- Dashboard
-- Vehicle registry
-- Driver management
-- Trip dispatch
-- Maintenance workflow
-- Analytics
