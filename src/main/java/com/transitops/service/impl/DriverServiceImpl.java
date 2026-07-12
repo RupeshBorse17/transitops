@@ -3,9 +3,12 @@ package com.transitops.service.impl;
 import com.transitops.dto.DriverDTO;
 import com.transitops.entity.Driver;
 import com.transitops.enums.DriverStatus;
+import com.transitops.exception.BusinessException;
+import com.transitops.exception.ResourceNotFoundException;
 import com.transitops.repository.DriverRepository;
 import com.transitops.service.DriverService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +16,17 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
 
     @Override
     public DriverDTO createDriver(DriverDTO driverDTO) {
+
+        if (driverRepository.existsByLicenseNumber(driverDTO.getLicenseNumber())) {
+            throw new BusinessException("Driver license number already exists");
+        }
 
         Driver driver = new Driver();
 
@@ -32,6 +40,8 @@ public class DriverServiceImpl implements DriverService {
 
         Driver savedDriver = driverRepository.save(driver);
 
+        log.info("Created driver with license number {}", savedDriver.getLicenseNumber());
+
         return convertToDTO(savedDriver);
     }
 
@@ -39,7 +49,7 @@ public class DriverServiceImpl implements DriverService {
     public DriverDTO getDriverById(Long id) {
 
         Driver driver = driverRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Driver not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
 
         return convertToDTO(driver);
     }
@@ -57,7 +67,7 @@ public class DriverServiceImpl implements DriverService {
     public DriverDTO updateDriver(Long id, DriverDTO driverDTO) {
 
         Driver driver = driverRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Driver not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
 
         driver.setName(driverDTO.getName());
         driver.setLicenseCategory(driverDTO.getLicenseCategory());
@@ -68,13 +78,19 @@ public class DriverServiceImpl implements DriverService {
 
         Driver updatedDriver = driverRepository.save(driver);
 
+        log.info("Updated driver id {}", id);
+
         return convertToDTO(updatedDriver);
     }
 
     @Override
     public void deleteDriver(Long id) {
 
+        if (!driverRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Driver not found");
+        }
         driverRepository.deleteById(id);
+        log.info("Deleted driver id {}", id);
     }
 
     private DriverDTO convertToDTO(Driver driver) {

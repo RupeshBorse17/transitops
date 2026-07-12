@@ -11,7 +11,10 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "drivers")
+@Table(name = "drivers", indexes = {
+        @Index(name = "idx_driver_status", columnList = "status"),
+        @Index(name = "idx_driver_license_expiry", columnList = "licenseExpiryDate")
+})
 @Getter
 @Setter
 @NoArgsConstructor

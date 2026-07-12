@@ -4,6 +4,9 @@ package com.transitops.controller;
 import com.transitops.dto.VehicleDTO;
 import com.transitops.service.VehicleService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/vehicles")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Tag(name = "Vehicles", description = "Vehicle registry APIs")
 public class VehicleController {
 
 
@@ -25,8 +29,9 @@ public class VehicleController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create a vehicle")
     public VehicleDTO createVehicle(
-            @RequestBody VehicleDTO dto){
+            @Valid @RequestBody VehicleDTO dto){
 
         return vehicleService.createVehicle(dto);
     }
@@ -34,6 +39,7 @@ public class VehicleController {
 
 
     @GetMapping
+    @Operation(summary = "Get all vehicles")
     public List<VehicleDTO> getAllVehicles(){
 
         return vehicleService.getAllVehicles();
@@ -42,6 +48,7 @@ public class VehicleController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get vehicle by id")
     public VehicleDTO getVehicle(
             @PathVariable Long id){
 
@@ -51,9 +58,10 @@ public class VehicleController {
 
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update a vehicle")
     public VehicleDTO updateVehicle(
             @PathVariable Long id,
-            @RequestBody VehicleDTO dto){
+            @Valid @RequestBody VehicleDTO dto){
 
         return vehicleService.updateVehicle(id,dto);
     }
@@ -61,6 +69,7 @@ public class VehicleController {
 
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a vehicle")
     public String deleteVehicle(
             @PathVariable Long id){
 
