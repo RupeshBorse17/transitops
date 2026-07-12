@@ -2,7 +2,7 @@ package com.transitops.entity;
 
 import com.transitops.enums.RoleType;
 import jakarta.persistence.*;
-
+//Roles
 @Entity
 @Table(name = "roles")
 public class Role {
