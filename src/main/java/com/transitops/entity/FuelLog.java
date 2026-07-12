@@ -1,17 +1,20 @@
 package com.transitops.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "fuel_logs")
+@Table(name = "fuel_logs", indexes = {
+        @Index(name = "idx_fuel_vehicle", columnList = "vehicle_id"),
+        @Index(name = "idx_fuel_date", columnList = "fuelDate")
+})
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FuelLog {
 
     @Id
@@ -24,8 +27,7 @@ public class FuelLog {
 
     private LocalDate fuelDate;
 
-    @ManyToOne
-    @JoinColumn(name = "trip_id")
-    private Trip trip;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
 }

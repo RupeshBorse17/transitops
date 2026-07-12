@@ -3,10 +3,13 @@ package com.transitops.service.impl;
 import com.transitops.dto.VehicleDTO;
 import com.transitops.entity.Vehicle;
 import com.transitops.enums.VehicleStatus;
+import com.transitops.exception.BusinessException;
+import com.transitops.exception.ResourceNotFoundException;
 import com.transitops.repository.VehicleRepository;
 import com.transitops.service.VehicleService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VehicleServiceImpl implements VehicleService {
 
 
@@ -24,6 +28,9 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO createVehicle(VehicleDTO dto) {
 
+        if (vehicleRepository.existsByRegistrationNumber(dto.getRegistrationNumber())) {
+            throw new BusinessException("Vehicle registration number already exists");
+        }
 
         Vehicle vehicle = new Vehicle();
 
@@ -39,6 +46,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         Vehicle saved = vehicleRepository.save(vehicle);
 
+        log.info("Created vehicle with registration number {}", saved.getRegistrationNumber());
 
         return convertToDTO(saved);
     }
@@ -50,7 +58,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         Vehicle vehicle =
                 vehicleRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
 
 
         return convertToDTO(vehicle);
@@ -75,7 +83,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         Vehicle vehicle =
                 vehicleRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
 
 
         vehicle.setVehicleName(dto.getVehicleName());
@@ -88,6 +96,7 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle updated =
                 vehicleRepository.save(vehicle);
 
+        log.info("Updated vehicle id {}", id);
 
         return convertToDTO(updated);
     }
@@ -97,7 +106,11 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void deleteVehicle(Long id) {
 
+        if (!vehicleRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Vehicle not found");
+        }
         vehicleRepository.deleteById(id);
+        log.info("Deleted vehicle id {}", id);
 
     }
 

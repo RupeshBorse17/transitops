@@ -7,5 +7,4 @@ public enum MaintenanceStatus {
     REJECTED,
     IN_PROGRESS,
     RESOLVED
-
 }

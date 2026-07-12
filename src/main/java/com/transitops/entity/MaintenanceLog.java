@@ -2,17 +2,18 @@ package com.transitops.entity;
 
 import com.transitops.enums.MaintenanceStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDate;
+import lombok.*;
 
 @Entity
-@Table(name = "maintenance_logs")
+@Table(name = "maintenance_logs", indexes = {
+        @Index(name = "idx_maintenance_status", columnList = "status"),
+        @Index(name = "idx_maintenance_vehicle", columnList = "vehicle_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MaintenanceLog {
 
     @Id
@@ -23,15 +24,14 @@ public class MaintenanceLog {
 
     private String priority;
 
-    private LocalDate requestDate;
+    private String technicianName;
 
-    private LocalDate completionDate;
+    private Double cost;
 
     @Enumerated(EnumType.STRING)
     private MaintenanceStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
-
 }
