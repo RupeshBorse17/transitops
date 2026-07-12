@@ -1,4 +1,11 @@
 package com.transitops.enums;
 
-public class MaintenanceStatus {
+public enum MaintenanceStatus {
+
+    PENDING,
+    APPROVED,
+    REJECTED,
+    IN_PROGRESS,
+    RESOLVED
+
 }

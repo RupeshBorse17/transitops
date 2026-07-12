@@ -1,4 +1,8 @@
 package com.transitops.enums;
 
-public class TripStatus {
+public enum TripStatus {
+    DRAFT,
+    DISPATCHED,
+    COMPLETED,
+    CANCELLED
 }

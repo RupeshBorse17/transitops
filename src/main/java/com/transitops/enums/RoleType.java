@@ -1,4 +1,11 @@
 package com.transitops.enums;
 
-public class RoleType {
+public enum RoleType {
+
+    ADMIN,
+    FLEET_MANAGER,
+    DRIVER,
+    SAFETY_OFFICER,
+    FINANCIAL_ANALYST
+
 }
